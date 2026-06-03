@@ -2,101 +2,114 @@
 import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
-import { AnchorLogo } from '@/components/ui/AnchorLogo'
-import { LayoutDashboard, TrendingUp, TrendingDown, Shield, Target, FileText, Calculator, BookOpen, User, LogOut, ChevronLeft, ChevronRight, Bell } from 'lucide-react'
 
-const navItems = [
-  { href: '/dashboard', icon: LayoutDashboard, label: 'Lagebericht' },
-  { href: '/dashboard/einnahmen', icon: TrendingUp, label: 'Einnahmen' },
-  { href: '/dashboard/ausgaben', icon: TrendingDown, label: 'Ausgaben' },
-  { href: '/dashboard/versicherungen', icon: Shield, label: 'Versicherungen' },
-  { href: '/dashboard/sparziele', icon: Target, label: 'Sparziele' },
-  { href: '/dashboard/notizen', icon: FileText, label: 'Notizen' },
-  { href: '/dashboard/rechner', icon: Calculator, label: 'Rechner' },
-  { href: '/dashboard/lexikon', icon: BookOpen, label: 'Lexikon' },
+const nav = [
+  { href: '/dashboard', icon: '⚓', label: 'Lagebericht' },
+  { href: '/dashboard/einnahmen', icon: '↑', label: 'Einnahmen' },
+  { href: '/dashboard/ausgaben', icon: '↓', label: 'Ausgaben' },
+  { href: '/dashboard/versicherungen', icon: '🛡', label: 'Versicherungen' },
+  { href: '/dashboard/sparziele', icon: '🎯', label: 'Sparziele' },
+  { href: '/dashboard/notizen', icon: '📝', label: 'Notizen' },
+  { href: '/dashboard/rechner', icon: '🧮', label: 'Rechner' },
+  { href: '/dashboard/lexikon', icon: '📖', label: 'Lexikon' },
 ]
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter()
   const pathname = usePathname()
-  const [collapsed, setCollapsed] = useState(false)
   const [userName, setUserName] = useState('')
   const [loading, setLoading] = useState(true)
+  const [collapsed, setCollapsed] = useState(false)
 
   useEffect(() => {
-    const supabase = createClient()
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
+    const sb = createClient()
+    sb.auth.getSession().then(async ({ data: { session } }) => {
       if (!session) { router.push('/login'); return }
-      const { data } = await supabase.from('profiles').select('full_name, onboarding_completed').eq('id', session.user.id).single()
+      const { data } = await sb.from('profiles').select('full_name,onboarding_completed').eq('id', session.user.id).single()
       if (data && !data.onboarding_completed) { router.push('/onboarding'); return }
       setUserName(data?.full_name?.split(' ')[0] || 'Kapitän')
       setLoading(false)
     })
   }, [router])
 
-  async function handleLogout() {
-    const supabase = createClient()
-    await supabase.auth.signOut()
+  async function logout() {
+    const sb = createClient()
+    await sb.auth.signOut()
     router.push('/')
   }
 
   if (loading) return (
-    <div className="min-h-screen bg-[#0D1B2A] flex items-center justify-center">
-      <div className="flex items-center gap-3 text-white animate-pulse">
-        <AnchorLogo size={32} white />
-        <span className="font-bebas text-xl tracking-wider">LADEN...</span>
-      </div>
+    <div style={{minHeight:'100vh',background:'#0D1B2A',display:'flex',alignItems:'center',justifyContent:'center'}}>
+      <div style={{color:'white',fontFamily:'Bebas Neue,sans-serif',fontSize:'24px',letterSpacing:'0.1em'}}>ANKERPUNKT LÄDT...</div>
     </div>
   )
 
   return (
-    <div className="flex h-screen bg-[#F4F2EE] overflow-hidden">
-      <aside className={`${collapsed ? 'w-16' : 'w-60'} bg-[#0D1B2A] flex flex-col transition-all duration-300 relative flex-shrink-0 border-r border-[#C8392B]`}>
-        <div className={`h-16 flex items-center border-b border-white/10 ${collapsed ? 'justify-center px-4' : 'px-5 gap-3'}`}>
-          <AnchorLogo size={26} white />
-          {!collapsed && <span className="font-bebas text-xl tracking-[0.12em] text-white">ANKERPUNKT</span>}
+    <div style={{display:'flex',height:'100vh',background:'#F4F2EE',overflow:'hidden'}}>
+      {/* SIDEBAR */}
+      <aside style={{width: collapsed ? '64px' : '220px', background:'#0D1B2A', display:'flex', flexDirection:'column', borderRight:'3px solid #C8392B', transition:'width 0.2s', flexShrink:0, position:'relative'}}>
+        {/* Logo */}
+        <div style={{height:'64px',display:'flex',alignItems:'center',padding: collapsed ? '0 18px' : '0 20px',borderBottom:'1px solid rgba(255,255,255,0.08)',gap:'10px'}}>
+          <div style={{width:'28px',height:'28px',background:'#C8392B',borderRadius:'6px',display:'flex',alignItems:'center',justifyContent:'center',color:'white',fontSize:'16px',flexShrink:0}}>⚓</div>
+          {!collapsed && <span style={{fontFamily:'Bebas Neue,sans-serif',fontSize:'18px',letterSpacing:'0.12em',color:'white'}}>ANKERPUNKT</span>}
         </div>
-        <nav className="flex-1 py-4 overflow-y-auto">
-          {navItems.map(item => {
+        {/* Nav */}
+        <nav style={{flex:1,padding:'12px 8px',overflowY:'auto'}}>
+          {nav.map(item => {
             const active = pathname === item.href
             return (
-              <a key={item.href} href={item.href}
-                className={`flex items-center ${collapsed ? 'justify-center px-4' : 'px-4 gap-3'} py-3 mx-2 rounded-lg transition-all ${active ? 'bg-[#C8392B] text-white' : 'text-white/40 hover:text-white hover:bg-white/5'}`}>
-                <item.icon size={18} className="flex-shrink-0" />
-                {!collapsed && <span className="text-sm font-medium">{item.label}</span>}
+              <a key={item.href} href={item.href} style={{
+                display:'flex', alignItems:'center', gap:'10px',
+                padding: collapsed ? '10px 18px' : '10px 12px',
+                borderRadius:'8px', marginBottom:'2px',
+                background: active ? '#C8392B' : 'transparent',
+                color: active ? 'white' : 'rgba(255,255,255,0.45)',
+                textDecoration:'none', fontSize:'13px', fontWeight: active ? '600' : '400',
+                transition:'all 0.15s',
+                justifyContent: collapsed ? 'center' : 'flex-start'
+              }}>
+                <span style={{fontSize:'16px',flexShrink:0}}>{item.icon}</span>
+                {!collapsed && <span>{item.label}</span>}
               </a>
             )
           })}
         </nav>
-        <div className="border-t border-white/10 p-3">
+        {/* User */}
+        <div style={{borderTop:'1px solid rgba(255,255,255,0.08)',padding:'12px 8px'}}>
           {!collapsed && (
-            <div className="flex items-center gap-3 px-2 py-2 mb-2">
-              <div className="w-8 h-8 rounded-full bg-[#C8392B] flex items-center justify-center text-white font-bebas text-sm">{userName[0]?.toUpperCase()}</div>
-              <div className="text-white text-xs font-medium truncate">{userName}</div>
+            <div style={{display:'flex',alignItems:'center',gap:'10px',padding:'8px 12px',marginBottom:'4px'}}>
+              <div style={{width:'32px',height:'32px',borderRadius:'50%',background:'#C8392B',display:'flex',alignItems:'center',justifyContent:'center',color:'white',fontWeight:'700',fontSize:'14px',flexShrink:0}}>{userName[0]?.toUpperCase()}</div>
+              <span style={{color:'rgba(255,255,255,0.7)',fontSize:'13px',fontWeight:'500'}}>{userName}</span>
             </div>
           )}
-          <a href="/dashboard/profil" className={`flex items-center ${collapsed ? 'justify-center' : 'gap-3 px-2'} py-2 text-white/40 hover:text-white transition-colors rounded-lg hover:bg-white/5`}>
-            <User size={16} />
-            {!collapsed && <span className="text-xs">Profil</span>}
+          <a href="/dashboard/profil" style={{display:'flex',alignItems:'center',gap:'10px',padding:'8px 12px',borderRadius:'6px',color:'rgba(255,255,255,0.35)',textDecoration:'none',fontSize:'12px',justifyContent: collapsed ? 'center' : 'flex-start'}}>
+            <span>👤</span>{!collapsed && 'Profil'}
           </a>
-          <button onClick={handleLogout} className={`w-full flex items-center ${collapsed ? 'justify-center' : 'gap-3 px-2'} py-2 text-white/40 hover:text-[#C8392B] transition-colors rounded-lg hover:bg-white/5`}>
-            <LogOut size={16} />
-            {!collapsed && <span className="text-xs">Abmelden</span>}
+          <button onClick={logout} style={{width:'100%',display:'flex',alignItems:'center',gap:'10px',padding:'8px 12px',borderRadius:'6px',color:'rgba(255,255,255,0.35)',background:'none',border:'none',cursor:'pointer',fontSize:'12px',justifyContent: collapsed ? 'center' : 'flex-start'}}>
+            <span>↩</span>{!collapsed && 'Abmelden'}
           </button>
         </div>
-        <button onClick={() => setCollapsed(c => !c)} className="absolute -right-3 top-1/2 -translate-y-1/2 w-6 h-6 bg-[#C8392B] text-white rounded-full flex items-center justify-center shadow-lg z-10">
-          {collapsed ? <ChevronRight size={12} /> : <ChevronLeft size={12} />}
+        {/* Toggle */}
+        <button onClick={() => setCollapsed(c => !c)} style={{position:'absolute',right:'-12px',top:'50%',transform:'translateY(-50%)',width:'24px',height:'24px',borderRadius:'50%',background:'#C8392B',border:'none',color:'white',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'12px',zIndex:10}}>
+          {collapsed ? '›' : '‹'}
         </button>
       </aside>
-      <main className="flex-1 overflow-y-auto">
-        <div className="h-14 bg-white border-b border-[#E8DFD0] flex items-center justify-between px-6 sticky top-0 z-10">
-          <div className="text-xs font-mono-ak text-[#C8392B] tracking-[0.2em] uppercase">
-            // {navItems.find(n => n.href === pathname)?.label || 'Dashboard'}
+      {/* MAIN */}
+      <div style={{flex:1,display:'flex',flexDirection:'column',overflow:'hidden'}}>
+        {/* Topbar */}
+        <div style={{height:'56px',background:'white',borderBottom:'1px solid #E8DFD0',display:'flex',alignItems:'center',justifyContent:'space-between',padding:'0 28px',flexShrink:0}}>
+          <div style={{fontFamily:'IBM Plex Mono,monospace',fontSize:'11px',color:'#C8392B',letterSpacing:'0.2em',textTransform:'uppercase'}}>
+            // {nav.find(n => n.href === pathname)?.label || 'Dashboard'}
           </div>
-          <div className="text-sm text-[#9AA0A6] font-mono-ak">{new Date().toLocaleDateString('de-DE', { day:'2-digit', month:'short', year:'numeric' })}</div>
+          <div style={{fontFamily:'IBM Plex Mono,monospace',fontSize:'11px',color:'#9AA0A6'}}>
+            {new Date().toLocaleDateString('de-DE',{day:'2-digit',month:'short',year:'numeric'})}
+          </div>
         </div>
-        <div className="p-6">{children}</div>
-      </main>
+        {/* Content */}
+        <main style={{flex:1,overflowY:'auto',padding:'32px 28px'}}>
+          {children}
+        </main>
+      </div>
     </div>
   )
 }
