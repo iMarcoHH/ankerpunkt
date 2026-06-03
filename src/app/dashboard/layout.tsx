@@ -77,7 +77,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   )
 
   return (
-    <div style={{display:'flex',height:'100vh',background:'#F4F2EE',overflow:'hidden'}}>
+    <div style={{display:'flex',height:'100vh',background:'#F0F4F8',overflow:'hidden'}}>
 
       {/* DESKTOP SIDEBAR */}
       {!isMobile && (
