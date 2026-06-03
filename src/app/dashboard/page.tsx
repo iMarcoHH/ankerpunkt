@@ -27,57 +27,88 @@ export default function DashboardPage() {
     load()
   }, [])
 
-  if (!data) return <div className="text-[#9AA0A6] p-6">Lädt...</div>
+  if (!data) return (
+    <div style={{display:'flex',alignItems:'center',justifyContent:'center',height:'60vh'}}>
+      <div style={{fontFamily:'IBM Plex Mono,monospace',fontSize:'12px',color:'#9AA0A6',letterSpacing:'0.2em'}}>LÄDT...</div>
+    </div>
+  )
 
   const budgetPct = data.budget > 0 ? Math.min(100, ((data.totalExpenses + data.totalInsurance) / data.budget) * 100) : 0
 
   return (
-    <div>
-      <div className="mb-6">
-        <div className="text-xs font-mono-ak text-[#C8392B] tracking-widest uppercase mb-1">// Ahoi {name}</div>
-        <h1 className="font-bebas text-4xl tracking-wider text-[#0D1B2A]">LAGEBERICHT</h1>
-        <p className="text-sm text-[#9AA0A6] mt-1">Dein Finanz-Überblick auf einen Blick.</p>
+    <div style={{maxWidth:'900px'}}>
+      {/* Header */}
+      <div style={{marginBottom:'32px'}}>
+        <div style={{fontFamily:'IBM Plex Mono,monospace',fontSize:'11px',color:'#C8392B',letterSpacing:'0.3em',textTransform:'uppercase',marginBottom:'6px'}}>// Ahoi {name}</div>
+        <h1 style={{fontFamily:'Bebas Neue,sans-serif',fontSize:'clamp(2.5rem,5vw,3.5rem)',letterSpacing:'0.06em',color:'#0D1B2A',lineHeight:'1',marginBottom:'6px'}}>LAGEBERICHT</h1>
+        <p style={{fontSize:'14px',color:'#9AA0A6',fontWeight:'300'}}>Dein Finanz-Überblick auf einen Blick.</p>
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+
+      {/* Hero Netto Card */}
+      <div style={{
+        background:'#0D1B2A',borderRadius:'16px',padding:'32px 36px',marginBottom:'16px',
+        borderLeft:'5px solid #C8392B',position:'relative',overflow:'hidden'
+      }}>
+        <div style={{position:'absolute',right:'-20px',top:'-20px',width:'160px',height:'160px',borderRadius:'50%',background:'rgba(200,57,43,0.08)'}}/>
+        <div style={{fontFamily:'IBM Plex Mono,monospace',fontSize:'10px',color:'rgba(255,255,255,0.3)',letterSpacing:'0.2em',textTransform:'uppercase',marginBottom:'8px'}}>Netto / Monat</div>
+        <div style={{fontFamily:'Bebas Neue,sans-serif',fontSize:'clamp(3rem,7vw,5rem)',color: data.netto >= 0 ? 'white' : '#C8392B',letterSpacing:'0.04em',lineHeight:'1',marginBottom:'4px'}}>
+          {data.netto >= 0 ? '+' : ''}{data.netto.toFixed(2)} €
+        </div>
+        <div style={{fontSize:'13px',color:'rgba(255,255,255,0.35)',fontWeight:'300'}}>
+          {data.netto >= 0 ? 'Du bist im Plus. Weiter so.' : 'Achtung — du gibst mehr aus als du einnimmst.'}
+        </div>
+      </div>
+
+      {/* Stats Grid */}
+      <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:'12px',marginBottom:'16px'}}>
         {[
-          { label: 'Einnahmen', value: data.totalIncome, color: '#0D1B2A', sign: '+' },
-          { label: 'Ausgaben', value: data.totalExpenses, color: '#C8392B', sign: '-' },
-          { label: 'Versicherungen', value: data.totalInsurance, color: '#9AA0A6', sign: '' },
-          { label: 'Netto', value: data.netto, color: data.netto >= 0 ? '#0D1B2A' : '#C8392B', sign: data.netto >= 0 ? '+' : '' },
+          { label: 'Einnahmen', value: data.totalIncome, sign: '+', color: '#0D1B2A', accent: '#E8A832' },
+          { label: 'Ausgaben', value: data.totalExpenses, sign: '-', color: '#0D1B2A', accent: '#C8392B' },
+          { label: 'Versicherungen', value: data.totalInsurance, sign: '', color: '#0D1B2A', accent: '#9AA0A6' },
         ].map(card => (
-          <div key={card.label} className="bg-white rounded-lg p-4 border border-[#E8DFD0] border-l-4" style={{borderLeftColor: card.color}}>
-            <div className="text-xs text-[#9AA0A6] uppercase tracking-wider mb-1">{card.label}</div>
-            <div className="font-bebas text-2xl" style={{color: card.color}}>{card.sign}{card.value.toFixed(2)} €</div>
-            <div className="text-xs text-[#9AA0A6]">/ Monat</div>
+          <div key={card.label} style={{
+            background:'white',borderRadius:'12px',padding:'20px',
+            borderTop:`3px solid ${card.accent}`,
+            boxShadow:'0 1px 8px rgba(13,27,42,0.06)'
+          }}>
+            <div style={{fontSize:'10px',color:'#9AA0A6',letterSpacing:'0.15em',textTransform:'uppercase',marginBottom:'8px',fontFamily:'IBM Plex Mono,monospace'}}>{card.label}</div>
+            <div style={{fontFamily:'Bebas Neue,sans-serif',fontSize:'1.8rem',color:card.color,letterSpacing:'0.04em',lineHeight:'1'}}>{card.sign}{card.value.toFixed(2)} €</div>
+            <div style={{fontSize:'11px',color:'#9AA0A6',marginTop:'4px'}}>/&nbsp;Monat</div>
           </div>
         ))}
       </div>
+
+      {/* Budget Bar */}
       {data.budget > 0 && (
-        <div className="bg-white rounded-lg p-5 border border-[#E8DFD0] mb-6">
-          <div className="flex justify-between items-center mb-2">
-            <div className="text-sm font-medium text-[#0D1B2A]">Budget-Auslastung</div>
-            <div className="text-sm text-[#9AA0A6]">{budgetPct.toFixed(0)}%</div>
+        <div style={{background:'white',borderRadius:'12px',padding:'20px 24px',marginBottom:'16px',boxShadow:'0 1px 8px rgba(13,27,42,0.06)'}}>
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'10px'}}>
+            <div style={{fontSize:'12px',fontWeight:'600',color:'#0D1B2A',letterSpacing:'0.04em'}}>Budget-Auslastung</div>
+            <div style={{fontFamily:'Bebas Neue,sans-serif',fontSize:'1.4rem',color: budgetPct > 80 ? '#C8392B' : '#0D1B2A'}}>{budgetPct.toFixed(0)}%</div>
           </div>
-          <div className="h-2 bg-[#E8DFD0] rounded-full">
-            <div className="h-full bg-[#C8392B] rounded-full transition-all" style={{width: budgetPct + '%'}}/>
+          <div style={{height:'6px',background:'#E8DFD0',borderRadius:'3px',overflow:'hidden'}}>
+            <div style={{height:'100%',width:`${budgetPct}%`,background: budgetPct > 80 ? '#C8392B' : '#0D1B2A',borderRadius:'3px',transition:'width 0.6s ease'}}/>
           </div>
-          <div className="text-xs text-[#9AA0A6] mt-1">{(data.totalExpenses + data.totalInsurance).toFixed(2)} € von {data.budget.toFixed(2)} € Budget</div>
+          <div style={{fontSize:'11px',color:'#9AA0A6',marginTop:'6px',fontFamily:'IBM Plex Mono,monospace'}}>
+            {(data.totalExpenses + data.totalInsurance).toFixed(2)} € von {data.budget.toFixed(2)} € Budget
+          </div>
         </div>
       )}
+
+      {/* Sparziele */}
       {data.savings.length > 0 && (
-        <div className="bg-white rounded-lg p-5 border border-[#E8DFD0]">
-          <div className="font-bebas text-xl tracking-wider text-[#0D1B2A] mb-4">SPARZIELE</div>
-          <div className="flex flex-col gap-3">
+        <div style={{background:'white',borderRadius:'12px',padding:'20px 24px',boxShadow:'0 1px 8px rgba(13,27,42,0.06)'}}>
+          <div style={{fontFamily:'Bebas Neue,sans-serif',fontSize:'1.3rem',letterSpacing:'0.08em',color:'#0D1B2A',marginBottom:'16px'}}>SPARZIELE</div>
+          <div style={{display:'flex',flexDirection:'column',gap:'14px'}}>
             {data.savings.map((goal: any) => {
               const pct = Math.min(100, (goal.current_amount / goal.target_amount) * 100)
               return (
                 <div key={goal.id}>
-                  <div className="flex justify-between text-sm mb-1">
-                    <span className="text-[#0D1B2A]">{goal.name}</span>
-                    <span className="text-[#9AA0A6]">{goal.current_amount.toFixed(0)} / {goal.target_amount.toFixed(0)} €</span>
+                  <div style={{display:'flex',justifyContent:'space-between',marginBottom:'6px'}}>
+                    <span style={{fontSize:'13px',fontWeight:'500',color:'#0D1B2A'}}>{goal.name}</span>
+                    <span style={{fontSize:'12px',color:'#9AA0A6',fontFamily:'IBM Plex Mono,monospace'}}>{goal.current_amount.toFixed(0)} / {goal.target_amount.toFixed(0)} €</span>
                   </div>
-                  <div className="h-1.5 bg-[#E8DFD0] rounded-full">
-                    <div className="h-full bg-[#C8392B] rounded-full" style={{width: pct + '%'}}/>
+                  <div style={{height:'4px',background:'#E8DFD0',borderRadius:'2px',overflow:'hidden'}}>
+                    <div style={{height:'100%',width:`${pct}%`,background:'#C8392B',borderRadius:'2px'}}/>
                   </div>
                 </div>
               )
