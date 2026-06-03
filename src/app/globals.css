@@ -13,3 +13,30 @@ body {
 .font-mono-ak { font-family: 'IBM Plex Mono', monospace !important; }
 .ak-input { width: 100%; padding: 10px 14px; border: 1.5px solid #E8DFD0; border-radius: 6px; font-size: 14px; color: #0D1B2A; background: #fff; outline: none; }
 .ak-input:focus { border-color: #C8392B; }
+
+.result-box {
+  background: #0D1B2A;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  margin-top: 8px;
+}
+.result-box .label {
+  font-size: 11px;
+  color: rgba(255,255,255,0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin-bottom: 8px;
+}
+.result-box .value {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.5rem;
+  color: #ffffff !important;
+  letter-spacing: 0.06em;
+  line-height: 1;
+}
+.result-box .note {
+  font-size: 11px;
+  color: rgba(255,255,255,0.3);
+  margin-top: 4px;
+}
