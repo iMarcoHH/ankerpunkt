@@ -3,19 +3,20 @@ import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
 import dynamic from 'next/dynamic'
+import { LayoutDashboard, TrendingUp, TrendingDown, Shield, Target, FileText, Calculator, BookOpen, Newspaper, User } from 'lucide-react'
 
 const Dock = dynamic(() => import('@/components/ui/Dock'), { ssr: false })
 
 const navItems = [
-  { href: '/dashboard', emoji: '⚓', label: 'Start' },
-  { href: '/dashboard/einnahmen', emoji: '↑', label: 'Einnahmen' },
-  { href: '/dashboard/ausgaben', emoji: '↓', label: 'Ausgaben' },
-  { href: '/dashboard/sparziele', emoji: '🎯', label: 'Sparziele' },
-  { href: '/dashboard/versicherungen', emoji: '🛡', label: 'Versicherung' },
-  { href: '/dashboard/notizen', emoji: '📝', label: 'Notizen' },
-  { href: '/dashboard/rechner', emoji: '🧮', label: 'Rechner' },
-  { href: '/dashboard/news', emoji: '📰', label: 'News' },
-  { href: '/dashboard/profil', emoji: '👤', label: 'Profil' },
+  { href: '/dashboard', icon: LayoutDashboard, label: 'Start' },
+  { href: '/dashboard/einnahmen', icon: TrendingUp, label: 'Einnahmen' },
+  { href: '/dashboard/ausgaben', icon: TrendingDown, label: 'Ausgaben' },
+  { href: '/dashboard/sparziele', icon: Target, label: 'Sparziele' },
+  { href: '/dashboard/versicherungen', icon: Shield, label: 'Versicherung' },
+  { href: '/dashboard/notizen', icon: FileText, label: 'Notizen' },
+  { href: '/dashboard/rechner', icon: Calculator, label: 'Rechner' },
+  { href: '/dashboard/news', icon: Newspaper, label: 'News' },
+  { href: '/dashboard/profil', icon: User, label: 'Profil' },
 ]
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -37,12 +38,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   if (loading) return (
     <div style={{minHeight:'100vh',background:'#0D1B2A',display:'flex',alignItems:'center',justifyContent:'center'}}>
-      <div style={{color:'white',fontFamily:'Bebas Neue,sans-serif',fontSize:'24px',letterSpacing:'0.1em'}}>⚓ ANKERPUNKT</div>
+      <div style={{color:'white',fontFamily:'Bebas Neue,sans-serif',fontSize:'24px',letterSpacing:'0.1em'}}>ANKERPUNKT</div>
     </div>
   )
 
   const dockItems = navItems.map(item => ({
-    icon: <span style={{fontSize:'20px'}}>{item.emoji}</span>,
+    icon: <item.icon size={20} color={pathname === item.href ? 'white' : 'rgba(255,255,255,0.7)'} strokeWidth={1.8}/>,
     label: item.label,
     className: pathname === item.href ? 'active-nav' : '',
     onClick: () => router.push(item.href)
@@ -50,7 +51,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   return (
     <div style={{minHeight:'100vh',background:'#F0F4F8',fontFamily:'IBM Plex Sans,sans-serif'}}>
-      {/* Top Bar */}
       <div style={{position:'fixed',top:0,left:0,right:0,zIndex:100,height:'60px',background:'white',borderBottom:'1px solid rgba(13,27,42,0.06)',display:'flex',alignItems:'center',justifyContent:'space-between',padding:'0 24px',boxShadow:'0 1px 8px rgba(13,27,42,0.04)'}}>
         <div style={{display:'flex',alignItems:'center',gap:'10px'}}>
           <svg width="26" height="26" viewBox="0 0 52 52" fill="none">
@@ -68,21 +68,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           {userName[0]?.toUpperCase()}
         </a>
       </div>
-
-      {/* Content */}
-      <main style={{paddingTop:'76px',paddingBottom:'120px',minHeight:'100vh',padding:'76px 24px 120px'}}>
+      <main style={{paddingTop:'76px',paddingBottom:'120px',padding:'76px 24px 120px'}}>
         {children}
       </main>
-
-      {/* Dock Navigation */}
       <div style={{position:'fixed',bottom:'20px',left:0,right:0,display:'flex',justifyContent:'center',zIndex:200}}>
-        <Dock
-          items={dockItems}
-          panelHeight={64}
-          baseItemSize={48}
-          magnification={68}
-          distance={150}
-        />
+        <Dock items={dockItems} panelHeight={60} baseItemSize={44} magnification={64} distance={140}/>
       </div>
     </div>
   )
