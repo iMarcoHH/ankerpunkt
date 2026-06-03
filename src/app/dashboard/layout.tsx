@@ -30,7 +30,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }, [router])
 
   if (loading) return (
-    <div style={{minHeight:'100vh',background:'#0D1B2A',display:'flex',alignItems:'center',justifyContent:'center'}}>
+    <div style={{minHeight:'100vh',background:'#F0F4F8',display:'flex',alignItems:'center',justifyContent:'center'}}>
       <div style={{color:'white',fontFamily:'Bebas Neue,sans-serif',fontSize:'24px',letterSpacing:'0.1em'}}>⚓ ANKERPUNKT</div>
     </div>
   )
@@ -45,10 +45,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   ]
 
   return (
-    <div style={{minHeight:'100vh',background:'#0D1B2A',color:'white',fontFamily:'IBM Plex Sans,sans-serif'}}>
+    <div style={{minHeight:'100vh',background:'#F0F4F8',color:'#0D1B2A',fontFamily:'IBM Plex Sans,sans-serif'}}>
       
       {/* Top Bar */}
-      <div style={{position:'fixed',top:0,left:0,right:0,zIndex:100,padding:'16px 20px',display:'flex',alignItems:'center',justifyContent:'space-between',background:'linear-gradient(to bottom, #0D1B2A 60%, transparent)'}}>
+      <div style={{position:'fixed',top:0,left:0,right:0,zIndex:100,padding:'16px 20px',display:'flex',alignItems:'center',justifyContent:'space-between',background:'linear-gradient(to bottom, #F0F4F8 60%, transparent)'}}>
         <div style={{display:'flex',alignItems:'center',gap:'8px'}}>
           <svg width="24" height="24" viewBox="0 0 52 52" fill="none">
             <circle cx="26" cy="10" r="5" stroke="#C8392B" strokeWidth="2.5" fill="none"/>
