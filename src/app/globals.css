@@ -14,37 +14,33 @@
   --off-white: #F4F2EE;
 }
 
-* { box-sizing: border-box; }
-
 body {
   background: var(--off-white);
   color: var(--navy);
   font-family: 'IBM Plex Sans', sans-serif;
 }
 
-.font-bebas { font-family: 'Bebas Neue', sans-serif; }
-.font-mono-ak { font-family: 'IBM Plex Mono', monospace; }
+.font-bebas { font-family: 'Bebas Neue', sans-serif !important; }
+.font-mono-ak { font-family: 'IBM Plex Mono', monospace !important; }
 
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #3D5166; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #C8392B; }
 
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(16px); }
-  to { opacity: 1; transform: translateY(0); }
+.ak-input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.5px solid #E8DFD0;
+  border-radius: 6px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 14px;
+  color: #0D1B2A;
+  background: #fff;
+  transition: border-color 0.15s;
+  outline: none;
 }
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-.animate-fade-up { animation: fadeUp 0.5s ease forwards; }
-.animate-fade-in { animation: fadeIn 0.4s ease forwards; }
-
-input[type="checkbox"] {
-  accent-color: var(--red);
-}
+.ak-input:focus { border-color: #C8392B; }
+.ak-input::placeholder { color: #9AA0A6; }
 
 .modal-overlay {
   position: fixed;
@@ -68,25 +64,13 @@ input[type="checkbox"] {
   box-shadow: 0 24px 64px rgba(0,0,0,0.2);
 }
 
-.ak-input {
-  width: 100%;
-  padding: 10px 14px;
-  border: 1.5px solid #E8DFD0;
-  border-radius: 6px;
-  font-family: 'IBM Plex Sans', sans-serif;
-  font-size: 14px;
-  color: var(--navy);
-  background: #fff;
-  transition: border-color 0.15s;
-  outline: none;
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
 }
-.ak-input:focus { border-color: var(--red); }
-.ak-input::placeholder { color: var(--cement); }
-
 @keyframes ticker {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
 }
-.ticker-animate {
-  animation: ticker 30s linear infinite;
-}
+
+.animate-fade-up { animation: fadeUp 0.5s ease forwards; }
