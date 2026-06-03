@@ -12,6 +12,7 @@ const nav = [
   { href: '/dashboard/notizen', icon: '📝', label: 'Notizen' },
   { href: '/dashboard/rechner', icon: '🧮', label: 'Rechner' },
   { href: '/dashboard/lexikon', icon: '📖', label: 'Lexikon' },
+  { href: '/dashboard/news', icon: '📰', label: 'News' },
 ]
 
 function AnchorIcon() {
